@@ -13,7 +13,7 @@ def missed_call(request):
             to=caller,
             body=(
                 f"Hi, sorry we missed your call! We'd love to help — "
-                f"tell us what you need and book directly here: {settings.BOOKING_URL}"
+                f"reply to this message with what you need, or book directly here: {settings.BOOKING_URL}"
             )
         )
     
