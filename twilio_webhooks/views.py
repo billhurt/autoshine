@@ -35,6 +35,6 @@ def incoming_sms(request):
     from twilio.twiml.messaging_response import MessagingResponse
     response = MessagingResponse()
     response.message(
-        "Thanks for getting in touch! We'll get back to you as soon as we can."
+        "Thanks for your message! We'll get back to you as soon as we can."
     )
     return HttpResponse(str(response), content_type='text/xml')
