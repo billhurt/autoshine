@@ -18,3 +18,23 @@ def missed_call(request):
         )
     
     return HttpResponse(missed_call_response(), content_type='text/xml')
+
+
+@csrf_exempt
+def incoming_sms(request):
+    from_number = request.POST.get('From')
+    message_body = request.POST.get('Body')
+    
+    # Forward the reply to the business owner
+    send_sms(
+        to=settings.BUSINESS_PHONE,
+        body=f"Reply from {from_number}: {message_body}"
+    )
+    
+    # Auto-reply to the customer
+    from twilio.twiml.messaging_response import MessagingResponse
+    response = MessagingResponse()
+    response.message(
+        "Thanks for getting in touch! We'll get back to you as soon as we can."
+    )
+    return HttpResponse(str(response), content_type='text/xml')
