@@ -38,3 +38,24 @@ def incoming_sms(request):
         "Thanks for your message! We'll get back to you as soon as we can."
     )
     return HttpResponse(str(response), content_type='text/xml')
+
+
+@csrf_exempt
+def voicemail(request):
+    recording_url = request.POST.get('RecordingUrl')
+    from_number = request.POST.get('From')
+
+    send_sms(
+        to=settings.BUSINESS_PHONE,
+        body=f"New voicemail from {from_number}: {recording_url}"
+    )
+
+    send_sms(
+        to=from_number,
+        body=(
+            f"Hi, thanks for your voicemail! We'll call you back soon. "
+            f"In the meantime you can book here: {settings.BOOKING_URL}"
+        )
+    )
+
+    return HttpResponse('', content_type='text/xml')

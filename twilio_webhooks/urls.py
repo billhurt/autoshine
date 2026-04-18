@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('missed-call/', views.missed_call, name='missed_call'),
     path('incoming-sms/', views.incoming_sms, name='incoming_sms'),
+    path('voicemail/', views.voicemail, name='voicemail'),
 ]
