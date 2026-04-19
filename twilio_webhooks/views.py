@@ -56,36 +56,16 @@ def voicemail(request):
 
 
 @csrf_exempt
-def recording_status(request):
-    status = request.POST.get('RecordingStatus')
-    caller = request.POST.get('From')
-    
-    # Log everything Twilio sends so we can see what's coming through
-    print(f"RECORDING STATUS: {status}")
-    print(f"CALLER: {caller}")
-    print(f"ALL POST DATA: {dict(request.POST)}")
-
-    if status == 'no-recording':
-        send_sms(
-            to=caller,
-            body=(
-                f"Hi, sorry we missed your call! We'd love to help — "
-                f"reply with what you need or book here: {settings.BOOKING_URL}"
-            )
-        )
-
-    return HttpResponse('', content_type='text/xml')
-
-
-@csrf_exempt
 def call_status(request):
     status = request.POST.get('CallStatus')
     caller = request.POST.get('From')
     duration = int(request.POST.get('CallDuration', 0))
-    recording_url = request.POST.get('RecordingUrl')
+    recording_sid = request.POST.get('RecordingSid')
 
-    # Only send SMS if call ended with no recording and short duration
-    if status == 'completed' and duration < 30:
+    print(f"CALL STATUS: {status}, DURATION: {duration}, RECORDING SID: {recording_sid}")
+
+    # Only send SMS if hung up without leaving a voicemail
+    if status == 'completed' and duration < 40 and not recording_sid:
         send_sms(
             to=caller,
             body=(
