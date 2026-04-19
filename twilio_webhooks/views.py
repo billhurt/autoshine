@@ -30,20 +30,20 @@ def incoming_sms(request):
 @csrf_exempt
 def voicemail(request):
     recording_url = request.POST.get('RecordingUrl')
+    recording_sid = request.POST.get('RecordingSid')
     from_number = request.POST.get('From')
 
     from twilio.rest import Client
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
-    # Send MMS with the recording attached
-    client.messages.create(
+    # Generate authenticated playback URL
+    playback_url = f"https://api.twilio.com/2010-04-01/Accounts/{settings.TWILIO_ACCOUNT_SID}/Recordings/{recording_sid}.mp3"
+
+    send_sms(
         to=settings.BUSINESS_PHONE,
-        from_=settings.TWILIO_PHONE_NUMBER,
-        body=f"New voicemail from {from_number}",
-        media_url=[f"{recording_url}.mp3"]
+        body=f"New voicemail from {from_number}. Listen: {playback_url}"
     )
 
-    # Thank the customer
     send_sms(
         to=from_number,
         body=(
@@ -85,7 +85,7 @@ def call_status(request):
     recording_url = request.POST.get('RecordingUrl')
 
     # Only send SMS if call ended with no recording and short duration
-    if status == 'completed' and duration < 25 and not recording_url:
+    if status == 'completed' and duration < 30:
         send_sms(
             to=caller,
             body=(
