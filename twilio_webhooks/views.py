@@ -74,11 +74,19 @@ def recording_status(request):
 
 @csrf_exempt
 def call_status(request):
-    call_status = request.POST.get('CallStatus')
+    status = request.POST.get('CallStatus')
     caller = request.POST.get('From')
-    
-    print(f"CALL STATUS: {call_status}")
-    print(f"CALLER: {caller}")
-    print(f"ALL POST DATA: {dict(request.POST)}")
+    duration = int(request.POST.get('CallDuration', 0))
+    recording_url = request.POST.get('RecordingUrl')
+
+    # Only send SMS if call ended with no recording and short duration
+    if status == 'completed' and duration < 25 and not recording_url:
+        send_sms(
+            to=caller,
+            body=(
+                f"Hi, sorry we missed your call! We'd love to help — "
+                f"reply with what you need or book here: {settings.BOOKING_URL}"
+            )
+        )
 
     return HttpResponse('', content_type='text/xml')
