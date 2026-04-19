@@ -54,8 +54,12 @@ def voicemail(request):
 def recording_status(request):
     status = request.POST.get('RecordingStatus')
     caller = request.POST.get('From')
+    
+    # Log everything Twilio sends so we can see what's coming through
+    print(f"RECORDING STATUS: {status}")
+    print(f"CALLER: {caller}")
+    print(f"ALL POST DATA: {dict(request.POST)}")
 
-    # Only fires if they hung up without leaving a voicemail
     if status == 'no-recording':
         send_sms(
             to=caller,
