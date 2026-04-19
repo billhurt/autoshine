@@ -11,7 +11,7 @@ def missed_call_response():
         max_length=60,
         action='/webhooks/twilio/voicemail/',
         method='POST',
-        recording_status_callback='/webhooks/twilio/recording-status/',
+        recording_status_callback='https://web-production-79971.up.railway.app/webhooks/twilio/recording-status/',
         recording_status_callback_method='POST',
     )
     return str(response)
