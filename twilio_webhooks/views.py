@@ -32,16 +32,18 @@ def voicemail(request):
     recording_url = request.POST.get('RecordingUrl')
     recording_sid = request.POST.get('RecordingSid')
     from_number = request.POST.get('From')
+    call_sid = request.POST.get('CallSid')
 
-    from twilio.rest import Client
-    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-
-    # Generate authenticated playback URL
-    playback_url = f"https://api.twilio.com/2010-04-01/Accounts/{settings.TWILIO_ACCOUNT_SID}/Recordings/{recording_sid}.mp3"
+    from .models import VoicemailRecord
+    VoicemailRecord.objects.create(
+        call_sid=call_sid,
+        from_number=from_number,
+        recording_url=f"https://api.twilio.com/2010-04-01/Accounts/{settings.TWILIO_ACCOUNT_SID}/Recordings/{recording_sid}.mp3"
+    )
 
     send_sms(
         to=settings.BUSINESS_PHONE,
-        body=f"New voicemail from {from_number}. Listen: {playback_url}"
+        body=f"New voicemail from {from_number}. Listen: https://api.twilio.com/2010-04-01/Accounts/{settings.TWILIO_ACCOUNT_SID}/Recordings/{recording_sid}.mp3"
     )
 
     send_sms(
@@ -61,17 +63,19 @@ def call_status(request):
     caller = request.POST.get('From')
     duration = int(request.POST.get('CallDuration', 0))
     sequence = int(request.POST.get('SequenceNumber', 0))
+    call_sid = request.POST.get('CallSid')
 
-    print(f"CALL STATUS: {status}, DURATION: {duration}, SEQUENCE: {sequence}")
+    from .models import VoicemailRecord
 
-    # Only process the final callback (sequence 0) and ignore duplicates
-    if status == 'completed' and duration < 40 and sequence == 0:
-        send_sms(
-            to=caller,
-            body=(
-                f"Hi, sorry we missed your call! We'd love to help — "
-                f"reply with what you need or book here: {settings.BOOKING_URL}"
+    if status == 'completed' and sequence == 0:
+        voicemail_left = VoicemailRecord.objects.filter(call_sid=call_sid).exists()
+        if not voicemail_left:
+            send_sms(
+                to=caller,
+                body=(
+                    f"Hi, sorry we missed your call! We'd love to help — "
+                    f"reply with what you need or book here: {settings.BOOKING_URL}"
+                )
             )
-        )
 
     return HttpResponse('', content_type='text/xml')
