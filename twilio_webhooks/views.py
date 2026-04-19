@@ -59,3 +59,20 @@ def voicemail(request):
     )
 
     return HttpResponse('', content_type='text/xml')
+
+
+@csrf_exempt
+def recording_status(request):
+    status = request.POST.get('RecordingStatus')
+    caller = request.POST.get('From')
+
+    if status == 'no-recording':
+        send_sms(
+            to=caller,
+            body=(
+                f"Hi, sorry we missed your call! We'd love to help — "
+                f"book directly here: {settings.BOOKING_URL}"
+            )
+        )
+
+    return HttpResponse('', content_type='text/xml')
