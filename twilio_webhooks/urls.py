@@ -6,4 +6,5 @@ urlpatterns = [
     path('incoming-sms/', views.incoming_sms, name='incoming_sms'),
     path('voicemail/', views.voicemail, name='voicemail'),
     path('recording-status/', views.recording_status, name='recording_status'),
+    path('call-status/', views.call_status, name='call_status'),
 ]

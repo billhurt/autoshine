@@ -35,7 +35,7 @@ def voicemail(request):
     # Notify business owner
     send_sms(
         to=settings.BUSINESS_PHONE,
-        body=f"New voicemail from {from_number}: {recording_url}"
+        body=f"New voicemail from {from_number}: {recording_url}.mp3"
     )
 
     # Thank the customer
@@ -68,5 +68,17 @@ def recording_status(request):
                 f"reply with what you need or book here: {settings.BOOKING_URL}"
             )
         )
+
+    return HttpResponse('', content_type='text/xml')
+
+
+@csrf_exempt
+def call_status(request):
+    call_status = request.POST.get('CallStatus')
+    caller = request.POST.get('From')
+    
+    print(f"CALL STATUS: {call_status}")
+    print(f"CALLER: {caller}")
+    print(f"ALL POST DATA: {dict(request.POST)}")
 
     return HttpResponse('', content_type='text/xml')
