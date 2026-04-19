@@ -60,12 +60,12 @@ def call_status(request):
     status = request.POST.get('CallStatus')
     caller = request.POST.get('From')
     duration = int(request.POST.get('CallDuration', 0))
-    recording_sid = request.POST.get('RecordingSid')
+    sequence = int(request.POST.get('SequenceNumber', 0))
 
-    print(f"CALL STATUS: {status}, DURATION: {duration}, RECORDING SID: {recording_sid}")
+    print(f"CALL STATUS: {status}, DURATION: {duration}, SEQUENCE: {sequence}")
 
-    # Only send SMS if hung up without leaving a voicemail
-    if status == 'completed' and duration < 40 and not recording_sid:
+    # Only process the final callback (sequence 0) and ignore duplicates
+    if status == 'completed' and duration < 40 and sequence == 0:
         send_sms(
             to=caller,
             body=(
