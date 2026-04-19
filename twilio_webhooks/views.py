@@ -1,7 +1,9 @@
-from django.http import HttpResponse
+import requests
+from django.http import HttpResponse, StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 from django.conf import settings
+from requests.auth import HTTPBasicAuth
 from .sms import send_sms
 from .twiml import missed_call_response
 
@@ -26,7 +28,7 @@ def recording_status(request):
 def voicemail(request):
     recording_sid = request.POST.get('RecordingSid')
     from_number = request.POST.get('From')
-    playback_url = f"https://api.twilio.com/2010-04-01/Accounts/{settings.TWILIO_ACCOUNT_SID}/Recordings/{recording_sid}.mp3"
+    playback_url = f"https://web-production-79971.up.railway.app/webhooks/twilio/voicemail/play/{recording_sid}/"
 
     send_sms(
         to=settings.BUSINESS_PHONE,
@@ -79,3 +81,13 @@ def call_status(request):
             )
 
     return HttpResponse('', content_type='text/xml')
+
+
+def play_voicemail(request, recording_sid):
+    url = f"https://api.twilio.com/2010-04-01/Accounts/{settings.TWILIO_ACCOUNT_SID}/Recordings/{recording_sid}.mp3"
+    r = requests.get(
+        url,
+        auth=HTTPBasicAuth(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN),
+        stream=True
+    )
+    return StreamingHttpResponse(r.iter_content(chunk_size=8192), content_type='audio/mpeg')

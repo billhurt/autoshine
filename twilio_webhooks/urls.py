@@ -7,4 +7,5 @@ urlpatterns = [
     path('voicemail/', views.voicemail, name='voicemail'),
     path('incoming-sms/', views.incoming_sms, name='incoming_sms'),
     path('call-status/', views.call_status, name='call_status'),
+    path('voicemail/play/<str:recording_sid>/', views.play_voicemail, name='play_voicemail'),
 ]
