@@ -32,10 +32,15 @@ def voicemail(request):
     recording_url = request.POST.get('RecordingUrl')
     from_number = request.POST.get('From')
 
-    # Notify business owner
-    send_sms(
+    from twilio.rest import Client
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+    # Send MMS with the recording attached
+    client.messages.create(
         to=settings.BUSINESS_PHONE,
-        body=f"New voicemail from {from_number}: {recording_url}.mp3"
+        from_=settings.TWILIO_PHONE_NUMBER,
+        body=f"New voicemail from {from_number}",
+        media_url=[f"{recording_url}.mp3"]
     )
 
     # Thank the customer
