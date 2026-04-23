@@ -1,26 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book a Detail — Autoshine</title>
+  <title>Book a Detail — OutKast Detailing Co.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black: #080a0f;
-      --surface: #0e1118;
-      --surface2: #151921;
-      --border: #1e2530;
-      --border2: #2a3340;
-      --steel: #4a9ebb;
-      --steel-dim: #2d6b85;
-      --steel-glow: rgba(74, 158, 187, 0.12);
-      --white: #f0f4f8;
-      --muted: #6b7a8d;
-      --muted2: #4a5568;
+      --black: #0a0a0a;
+      --surface: #111111;
+      --surface2: #181818;
+      --surface3: #202020;
+      --border: #2a2a2a;
+      --border2: #333333;
+      --gold: #c9a84c;
+      --gold-light: #e8c96a;
+      --gold-dim: #8a6f2e;
+      --gold-glow: rgba(201, 168, 76, 0.12);
+      --gold-glow2: rgba(201, 168, 76, 0.06);
+      --white: #f5f5f5;
+      --muted: #777777;
+      --muted2: #444444;
       --success: #3dba7e;
     }
 
@@ -29,113 +33,134 @@
     body {
       background: var(--black);
       color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    body::before {
+    /* Subtle grain overlay */
+    body::after {
       content: '';
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(74,158,187,0.08) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 30% at 90% 80%, rgba(74,158,187,0.04) 0%, transparent 60%);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
       pointer-events: none;
-      z-index: 0;
+      z-index: 999;
+      opacity: 0.4;
     }
 
-    nav {
+    /* Gold line accent at top */
+    body::before {
+      content: '';
       position: fixed;
       top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      z-index: 200;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 2px; left: 0; right: 0;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 40px;
+      padding: 16px 40px;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      background: rgba(8, 10, 15, 0.85);
-      backdrop-filter: blur(16px);
     }
 
-    .logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 0.12em;
-      color: var(--white);
+    .nav-logo {
+      height: 36px;
+      width: auto;
     }
-
-    .logo span { color: var(--steel); }
 
     .nav-tag {
-      font-size: 11px;
-      letter-spacing: 0.2em;
+      font-size: 10px;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--gold);
+      font-weight: 600;
     }
 
+    /* Hero */
     .hero {
       position: relative;
       z-index: 1;
-      padding: 140px 40px 60px;
-      max-width: 760px;
+      padding: 130px 40px 56px;
+      max-width: 800px;
       margin: 0 auto;
+      text-align: center;
     }
 
-    .eyebrow {
-      font-size: 11px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--steel);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .eyebrow::before {
-      content: '';
+    .hero-logo {
+      width: min(420px, 85vw);
+      height: auto;
+      margin: 0 auto 32px;
       display: block;
-      width: 28px;
-      height: 1px;
-      background: var(--steel);
+      filter: drop-shadow(0 4px 32px rgba(201, 168, 76, 0.2));
+      animation: fadeUp 0.8s ease forwards;
     }
 
-    h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(48px, 8vw, 80px);
-      line-height: 0.95;
-      letter-spacing: 0.04em;
-      color: var(--white);
-      margin-bottom: 20px;
-    }
-
-    h1 em {
-      font-style: normal;
-      color: var(--steel);
+    .hero-tagline {
+      font-size: clamp(13px, 2vw, 15px);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 16px;
+      animation: fadeUp 0.8s ease 0.1s both;
     }
 
     .hero-sub {
       font-size: 15px;
       color: var(--muted);
-      line-height: 1.7;
-      max-width: 460px;
+      line-height: 1.8;
+      max-width: 420px;
+      margin: 0 auto;
+      font-weight: 400;
+      animation: fadeUp 0.8s ease 0.2s both;
     }
 
+    /* Gold divider */
     .divider {
       position: relative;
       z-index: 1;
-      max-width: 760px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 0 40px;
-      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2));
+    }
+
+    .divider::after {
+      background: linear-gradient(90deg, var(--border2), transparent);
+    }
+
+    .divider-crown {
+      color: var(--gold);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Form section */
     .form-section {
       position: relative;
       z-index: 1;
-      max-width: 760px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 48px 40px 80px;
     }
@@ -143,7 +168,7 @@
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 14px;
     }
 
     .field {
@@ -155,21 +180,21 @@
     .field.full { grid-column: 1 / -1; }
 
     label {
-      font-size: 11px;
-      letter-spacing: 0.18em;
+      font-size: 10px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 500;
+      color: var(--gold);
+      font-weight: 600;
     }
 
-    input, textarea {
+    input, textarea, input[type="date"] {
       background: var(--surface2);
       border: 1px solid var(--border2);
-      border-radius: 6px;
+      border-radius: 4px;
       color: var(--white);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       font-size: 14px;
-      font-weight: 300;
+      font-weight: 400;
       padding: 14px 16px;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
@@ -179,21 +204,34 @@
     input::placeholder, textarea::placeholder { color: var(--muted2); }
 
     input:focus, textarea:focus {
-      border-color: var(--steel-dim);
-      box-shadow: 0 0 0 3px var(--steel-glow);
-      background: var(--surface);
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+      background: var(--surface3);
     }
 
-    textarea { resize: vertical; min-height: 100px; }
+    /* Date picker styling */
+    input[type="date"] {
+      color-scheme: dark;
+      cursor: pointer;
+    }
 
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.7) sepia(1) saturate(3) hue-rotate(5deg);
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    textarea { resize: vertical; min-height: 90px; }
+
+    /* Service cards */
     .services-label {
-      font-size: 11px;
-      letter-spacing: 0.18em;
+      font-size: 10px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 500;
+      color: var(--gold);
+      font-weight: 600;
       grid-column: 1 / -1;
-      margin-bottom: -4px;
+      margin-bottom: -2px;
     }
 
     .service-cards {
@@ -205,7 +243,7 @@
 
     .service-card {
       border: 1px solid var(--border2);
-      border-radius: 8px;
+      border-radius: 4px;
       padding: 16px;
       cursor: pointer;
       transition: all 0.2s;
@@ -215,14 +253,14 @@
     }
 
     .service-card:hover {
-      border-color: var(--steel-dim);
-      background: var(--surface);
+      border-color: var(--gold-dim);
+      background: var(--surface3);
     }
 
     .service-card.selected {
-      border-color: var(--steel);
-      background: var(--steel-glow);
-      box-shadow: 0 0 0 1px var(--steel);
+      border-color: var(--gold);
+      background: var(--gold-glow2);
+      box-shadow: 0 0 0 1px var(--gold), inset 0 0 20px var(--gold-glow);
     }
 
     .service-card input[type="radio"] {
@@ -232,27 +270,44 @@
       height: 0;
     }
 
+    .s-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1px solid var(--muted2);
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+
+    .service-card.selected .s-dot {
+      background: var(--gold);
+      border-color: var(--gold);
+      box-shadow: 0 0 6px var(--gold);
+    }
+
     .s-name {
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--white);
       margin-bottom: 4px;
+      letter-spacing: 0.02em;
     }
 
     .s-price {
-      font-size: 18px;
-      font-family: 'Bebas Neue', sans-serif;
-      letter-spacing: 0.05em;
-      color: var(--steel);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
     }
 
     .s-desc {
       font-size: 11px;
       color: var(--muted);
-      margin-top: 4px;
       line-height: 1.5;
     }
 
+    /* Custom field */
     .custom-field {
       grid-column: 1 / -1;
       display: none;
@@ -263,6 +318,103 @@
 
     .custom-field.visible { display: flex; }
 
+    /* Photo upload */
+    .upload-area {
+      grid-column: 1 / -1;
+      border: 1px dashed var(--border2);
+      border-radius: 4px;
+      background: var(--surface2);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .upload-area:hover {
+      border-color: var(--gold-dim);
+      background: var(--surface3);
+    }
+
+    .upload-area.dragover {
+      border-color: var(--gold);
+      background: var(--gold-glow);
+    }
+
+    .upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: none;
+      background: none;
+    }
+
+    .upload-icon {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 10px;
+      opacity: 0.4;
+    }
+
+    .upload-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .upload-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .upload-sub span {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-remove {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.8);
+      border: 1px solid var(--border2);
+      color: var(--white);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Submit */
     .submit-row {
       grid-column: 1 / -1;
       display: flex;
@@ -274,41 +426,54 @@
     }
 
     .submit-note {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.7;
       max-width: 340px;
     }
 
     .submit-note strong {
       color: var(--white);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .btn {
-      background: var(--steel);
+      background: var(--gold);
       color: var(--black);
       border: none;
-      border-radius: 6px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 16px;
-      letter-spacing: 0.12em;
-      padding: 16px 36px;
+      border-radius: 4px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px 40px;
       cursor: pointer;
       transition: all 0.2s;
       white-space: nowrap;
       flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+      pointer-events: none;
     }
 
     .btn:hover {
-      background: var(--white);
+      background: var(--gold-light);
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(74,158,187,0.25);
+      box-shadow: 0 8px 28px rgba(201, 168, 76, 0.35);
     }
 
     .btn:active { transform: translateY(0); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+    /* Success */
     .success-screen {
       display: none;
       text-align: center;
@@ -321,11 +486,11 @@
     }
 
     .success-icon {
-      width: 64px;
-      height: 64px;
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
-      background: rgba(61, 186, 126, 0.1);
-      border: 1px solid rgba(61, 186, 126, 0.3);
+      background: rgba(201, 168, 76, 0.08);
+      border: 1px solid rgba(201, 168, 76, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -334,32 +499,41 @@
 
     .success-icon svg {
       width: 28px; height: 28px;
-      stroke: var(--success); fill: none;
+      stroke: var(--gold); fill: none;
       stroke-width: 2.5;
       stroke-linecap: round; stroke-linejoin: round;
     }
 
     .success-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 42px;
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+
+    .success-crown {
+      font-size: 32px;
+      margin-bottom: 16px;
+      display: block;
     }
 
     .success-body {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--muted);
-      line-height: 1.7;
-      max-width: 400px;
+      line-height: 1.8;
+      max-width: 380px;
       margin: 0 auto;
     }
 
+    /* Footer */
     footer {
       position: relative;
       z-index: 1;
       border-top: 1px solid var(--border);
       padding: 24px 40px;
-      max-width: 760px;
+      max-width: 800px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -367,20 +541,20 @@
     }
 
     .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 16px;
-      letter-spacing: 0.1em;
-      color: var(--muted2);
+      height: 24px;
+      width: auto;
+      opacity: 0.4;
     }
 
     .footer-note {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted2);
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -398,14 +572,17 @@
     .form-grid > *:nth-child(8) { animation-delay: 0.4s; }
     .form-grid > *:nth-child(9) { animation-delay: 0.45s; }
     .form-grid > *:nth-child(10) { animation-delay: 0.5s; }
+    .form-grid > *:nth-child(11) { animation-delay: 0.55s; }
+    .form-grid > *:nth-child(12) { animation-delay: 0.6s; }
 
     @media (max-width: 600px) {
-      nav { padding: 16px 20px; }
-      .hero { padding: 120px 20px 40px; }
+      nav { padding: 14px 20px; }
+      .hero { padding: 110px 20px 40px; }
       .divider, .form-section { padding-left: 20px; padding-right: 20px; }
       .form-grid { grid-template-columns: 1fr; }
       .field.full { grid-column: 1; }
       .service-cards { grid-template-columns: 1fr; }
+      .preview-grid { grid-template-columns: repeat(3, 1fr); }
       .submit-row { flex-direction: column; align-items: flex-start; }
       .btn { width: 100%; text-align: center; }
       footer { flex-direction: column; gap: 8px; text-align: center; }
@@ -415,17 +592,19 @@
 <body>
 
 <nav>
-  <div class="logo">Auto<span>shine</span></div>
-  <div class="nav-tag">Mobile Detailing</div>
+  <img src="{% static 'images/outkast-logo-dark.png' %}" alt="OutKast Detailing Co." class="nav-logo">
+  <div class="nav-tag">Book a Detail</div>
 </nav>
 
 <div class="hero">
-  <div class="eyebrow">Book a detail</div>
-  <h1>Your car,<br><em>showroom</em><br>ready.</h1>
-  <p class="hero-sub">Fill in your details below and we'll be in touch to confirm your booking. We come to you — no need to leave home.</p>
+  <img src="{% static 'images/outkast-logo-dark.png' %}" alt="OutKast Detailing Co." class="hero-logo">
+  <div class="hero-tagline">Mobile Detailing — We Come To You</div>
+  <p class="hero-sub">Fill in your details below and we'll be in touch to confirm your booking.</p>
 </div>
 
-<div class="divider"></div>
+<div class="divider">
+  <div class="divider-crown">♛</div>
+</div>
 
 <div class="form-section">
 
@@ -433,11 +612,13 @@
     <div class="success-icon">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
     </div>
+    <span class="success-crown">♛</span>
     <div class="success-title">You're Booked In</div>
     <p class="success-body">Thanks! We'll text you shortly to confirm your slot. Keep an eye on your phone.</p>
   </div>
 
-  <form id="bookingForm">
+  <form id="bookingForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
     <div class="form-grid">
 
       <div class="field">
@@ -466,8 +647,8 @@
       </div>
 
       <div class="field full">
-        <label>Preferred date & time</label>
-        <input type="text" name="preferred_date" placeholder="e.g. Any weekday morning, or Saturday 10am">
+        <label>Preferred date</label>
+        <input type="date" name="preferred_date" min="{{ today }}">
       </div>
 
       <div class="services-label">What do you need?</div>
@@ -475,24 +656,28 @@
       <div class="service-cards">
         <label class="service-card" id="card-mini">
           <input type="radio" name="service" value="mini" required>
+          <div class="s-dot"></div>
           <div class="s-name">Mini Valet</div>
           <div class="s-price">From £45</div>
           <div class="s-desc">Exterior wash, interior vacuum & wipe down</div>
         </label>
         <label class="service-card" id="card-full">
           <input type="radio" name="service" value="full">
+          <div class="s-dot"></div>
           <div class="s-name">Full Valet</div>
           <div class="s-price">From £120</div>
           <div class="s-desc">Full interior & exterior detail, polish & dress</div>
         </label>
         <label class="service-card" id="card-premium">
           <input type="radio" name="service" value="premium">
+          <div class="s-dot"></div>
           <div class="s-name">Premium Detail</div>
           <div class="s-price">From £220</div>
           <div class="s-desc">Clay bar, machine polish, ceramic coating & full detail</div>
         </label>
         <label class="service-card" id="card-other">
           <input type="radio" name="service" value="other">
+          <div class="s-dot"></div>
           <div class="s-name">Something Else</div>
           <div class="s-price">Let's talk</div>
           <div class="s-desc">Paint correction, scratch removal, engine bay, headlights & more</div>
@@ -501,7 +686,21 @@
 
       <div class="custom-field" id="customField">
         <label>Tell us what you need</label>
-        <textarea name="custom_service" placeholder="e.g. I've got light scratches on the bonnet and the headlights are hazy — can you help?"></textarea>
+        <textarea name="custom_service" placeholder="e.g. Light scratches on the bonnet, hazy headlights — can you help?"></textarea>
+      </div>
+
+      <!-- Photo upload -->
+      <div class="field full">
+        <label>Photos of your vehicle (optional)</label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" name="photos" id="photoInput" accept="image/*" multiple>
+          <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <div class="upload-title">Drop photos here or tap to browse</div>
+          <div class="upload-sub">Helps us quote accurately — <span>up to 4 images</span></div>
+        </div>
+        <div class="preview-grid" id="previewGrid"></div>
       </div>
 
       <div class="field full">
@@ -519,11 +718,12 @@
 </div>
 
 <footer>
-  <div class="footer-logo">Autoshine</div>
-  <div class="footer-note">Mobile detailing — we come to you</div>
+  <img src="{% static 'images/outkast-logo-dark.png' %}" alt="OutKast Detailing Co." class="footer-logo">
+  <div class="footer-note">Mobile detailing · Leeds</div>
 </footer>
 
 <script>
+  // Service card selection
   const cards = document.querySelectorAll('.service-card');
   const customField = document.getElementById('customField');
 
@@ -531,7 +731,6 @@
     card.addEventListener('click', function() {
       cards.forEach(c => c.classList.remove('selected'));
       this.classList.add('selected');
-
       const radio = this.querySelector('input[type="radio"]');
       if (radio) radio.checked = true;
 
@@ -545,15 +744,70 @@
     });
   });
 
+  // Photo upload & preview
+  const photoInput = document.getElementById('photoInput');
+  const previewGrid = document.getElementById('previewGrid');
+  const uploadArea = document.getElementById('uploadArea');
+  let files = [];
+
+  photoInput.addEventListener('change', handleFiles);
+
+  uploadArea.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+
+  uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFiles({ target: { files: e.dataTransfer.files } });
+  });
+
+  function handleFiles(e) {
+    const newFiles = Array.from(e.target.files).slice(0, 4 - files.length);
+    files = [...files, ...newFiles].slice(0, 4);
+    renderPreviews();
+  }
+
+  function renderPreviews() {
+    previewGrid.innerHTML = '';
+    files.forEach((file, i) => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        item.innerHTML = `
+          <img src="${ev.target.result}" alt="Vehicle photo ${i+1}">
+          <div class="preview-remove" onclick="removeFile(${i})">×</div>
+        `;
+        previewGrid.appendChild(item);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removeFile(index) {
+    files.splice(index, 1);
+    renderPreviews();
+  }
+
+  // Date picker — disable past dates
+  const dateInput = document.querySelector('input[type="date"]');
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.min = today;
+
+  // Form submission
   document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const btn = this.querySelector('.btn');
     btn.textContent = 'Sending...';
     btn.disabled = true;
 
-    // Replace setTimeout with fetch() to Django view when ready
+    // Replace with fetch() POST to Django view when ready
     setTimeout(() => {
-      document.getElementById('bookingForm').style.display = 'none';
+      this.style.display = 'none';
       const success = document.getElementById('success');
       success.classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
