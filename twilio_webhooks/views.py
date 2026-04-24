@@ -14,14 +14,47 @@ def missed_call(request):
 
 
 @csrf_exempt
+def voicemail(request):
+    recording_sid = request.POST.get('RecordingSid')
+    from_number = request.POST.get('From')
+    call_sid = request.POST.get('CallSid')
+    
+    print(f"VOICEMAIL FIRED: recording_sid={recording_sid}, call_sid={call_sid}")
+    
+    if not recording_sid:
+        print("NO RECORDING SID - skipping")
+        return HttpResponse('', content_type='text/xml')
+
+    cache.set(f'voicemail_{call_sid}', True, 300)
+    
+    playback_url = f"https://web-production-79971.up.railway.app/webhooks/twilio/voicemail/play/{recording_sid}/"
+    send_sms(
+        to=settings.BUSINESS_PHONE,
+        body=f"New voicemail from {from_number}. Listen: {playback_url}"
+    )
+    send_sms(
+        to=from_number,
+        body=(
+            f"Hi, Outkast detailing here, thanks for your voicemail! We'll call you back soon. "
+            f"In the meantime you can book here: {settings.BOOKING_URL}"
+        )
+    )
+
+    return HttpResponse('', content_type='text/xml')
+
+
+@csrf_exempt
 def call_status(request):
     status = request.POST.get('CallStatus')
     caller = request.POST.get('From')
     call_sid = request.POST.get('CallSid')
     sequence = int(request.POST.get('SequenceNumber', 0))
 
+    print(f"CALL STATUS FIRED: status={status}, sequence={sequence}, call_sid={call_sid}")
+    voicemail_left = cache.get(f'voicemail_{call_sid}')
+    print(f"VOICEMAIL FLAG: {voicemail_left}")
+
     if status == 'completed' and sequence == 0:
-        voicemail_left = cache.get(f'voicemail_{call_sid}')
         if not voicemail_left:
             send_sms(
                 to=caller,
@@ -48,31 +81,6 @@ def recording_status(request):
                 f"reply with what you need or book here: {settings.BOOKING_URL}"
             )
         )
-
-    return HttpResponse('', content_type='text/xml')
-
-
-@csrf_exempt
-def voicemail(request):
-    recording_sid = request.POST.get('RecordingSid')
-    from_number = request.POST.get('From')
-    call_sid = request.POST.get('CallSid')
-
-    # Set flag so call_status knows a voicemail was left
-    cache.set(f'voicemail_{call_sid}', True, 300)
-
-    playback_url = f"https://web-production-79971.up.railway.app/webhooks/twilio/voicemail/play/{recording_sid}/"
-    send_sms(
-        to=settings.BUSINESS_PHONE,
-        body=f"New voicemail from {from_number}. Listen: {playback_url}"
-    )
-    send_sms(
-        to=from_number,
-        body=(
-            f"Hi, Outkast detailing here, thanks for your voicemail! We'll call you back soon. "
-            f"In the meantime you can book here: {settings.BOOKING_URL}"
-        )
-    )
 
     return HttpResponse('', content_type='text/xml')
 
