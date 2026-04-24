@@ -4,7 +4,7 @@ def missed_call_response():
     response = VoiceResponse()
     response.say(
         "Hi, sorry we missed your call. Please reply to the text message we've just sent, or feel free to leave a voicemail after the tone. "
-        "Thanks for calling Outcast detailing.",
+        "Thanks for calling Autoshine.",
         voice='Polly.Amy'
     )
     response.record(

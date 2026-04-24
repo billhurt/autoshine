@@ -36,7 +36,7 @@ def voicemail(request):
     send_sms(
         to=from_number,
         body=(
-            f"Hi, Outkast detailing here, thanks for your voicemail! We'll call you back soon. "
+            f"Hi, Autoshine here, thanks for your voicemail! We'll call you back soon. "
             f"In the meantime you can book here: {settings.BOOKING_URL}"
         )
     )
@@ -60,7 +60,7 @@ def call_status(request):
             send_sms(
                 to=caller,
                 body=(
-                    f"Hi, Outkast detailing here, sorry we missed your call! We'd love to help — "
+                    f"Hi, Autoshine here, sorry we missed your call! We'd love to help — "
                     f"reply with what you need or book here: {settings.BOOKING_URL}"
                 )
             )
@@ -78,7 +78,7 @@ def recording_status(request):
         send_sms(
             to=caller,
             body=(
-                f"Hi, Outkast detailing here, sorry we missed your call! We'd love to help — "
+                f"Hi, Autoshine here, sorry we missed your call! We'd love to help — "
                 f"reply with what you need or book here: {settings.BOOKING_URL}"
             )
         )
