@@ -18,15 +18,16 @@ def voicemail(request):
     recording_sid = request.POST.get('RecordingSid')
     from_number = request.POST.get('From')
     call_sid = request.POST.get('CallSid')
-    
-    print(f"VOICEMAIL FIRED: recording_sid={recording_sid}, call_sid={call_sid}")
-    
-    if not recording_sid:
-        print("NO RECORDING SID - skipping")
+    recording_duration = int(request.POST.get('RecordingDuration', 0))
+
+    print(f"VOICEMAIL FIRED: recording_sid={recording_sid}, duration={recording_duration}, call_sid={call_sid}")
+
+    if not recording_sid or recording_duration < 2:
+        print("No real voicemail — skipping")
         return HttpResponse('', content_type='text/xml')
 
     cache.set(f'voicemail_{call_sid}', True, 300)
-    
+
     playback_url = f"https://web-production-79971.up.railway.app/webhooks/twilio/voicemail/play/{recording_sid}/"
     send_sms(
         to=settings.BUSINESS_PHONE,
