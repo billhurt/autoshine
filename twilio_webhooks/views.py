@@ -70,6 +70,8 @@ def call_status(request):
     call_sid = request.POST.get('CallSid')
 
     if status == 'completed' and sequence == 0:
+        # Wait briefly to allow recording_status callback to set the cache
+        time.sleep(2)
         voicemail_left = cache.get(f'voicemail_{call_sid}')
         if not voicemail_left:
             send_sms(
